@@ -20,11 +20,15 @@ exports.createRecipe = async (req, res) => {
     if (typeof recipeData.ingredients === 'string') recipeData.ingredients = JSON.parse(recipeData.ingredients);
     if (typeof recipeData.instructions === 'string') recipeData.instructions = JSON.parse(recipeData.instructions);
 
+    if (req.user) {
+      recipeData.author = req.user.id;
+    }
+
     const newRecipe = await recipeService.createRecipe(recipeData);
     res.status(201).json(newRecipe);
   } catch (err) {
-    console.error("Error creating recipe:", err);
-    res.status(500).json({ message: "Failed to create recipe" });
+    console.error("Full error creating recipe:", err);
+    res.status(500).json({ message: "Failed to create recipe", error: err.message });
   }
 };
 
@@ -55,5 +59,17 @@ exports.deleteRecipe = async (req, res) => {
   } catch (err) {
     console.error("Error deleting recipe:", err);
     res.status(500).json({ message: "Failed to delete recipe" });
+  }
+};
+
+exports.search = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q) return res.json([]);
+    const suggestions = await recipeService.searchRecipes(q);
+    res.json(suggestions);
+  } catch (err) {
+    console.error("Error searching recipes:", err);
+    res.status(500).json({ message: "Error searching recipes" });
   }
 };

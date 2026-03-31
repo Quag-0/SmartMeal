@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import RecipeModal from '../components/RecipeModal';
+import './Planner.css';
 
 function Planner() {
   const [recipes, setRecipes] = useState([]);
@@ -40,15 +41,22 @@ function Planner() {
     }
   };
 
-  const handleDragStart = (e, recipeId) => {
+  const handleDragStart = (e, recipeId, sourceSlotKey = null) => {
     e.dataTransfer.setData('recipeId', recipeId);
+    if (sourceSlotKey) {
+      e.dataTransfer.setData('sourceSlotKey', sourceSlotKey);
+    }
   };
 
   const handleDrop = (e, slotKey) => {
     e.preventDefault();
     const recipeId = e.dataTransfer.getData('recipeId');
+    const sourceSlotKey = e.dataTransfer.getData('sourceSlotKey');
     if (recipeId) {
       const newPlan = { ...mealPlan, [slotKey]: { recipeId: parseInt(recipeId, 10) } };
+      if (sourceSlotKey && sourceSlotKey !== slotKey) {
+        delete newPlan[sourceSlotKey];
+      }
       updateMealPlan(newPlan);
     }
   };
@@ -77,8 +85,20 @@ function Planner() {
     });
 
     const mergedIngredients = allIngredients.reduce((acc, ingredient) => {
-      if (!acc.find(item => item.name === ingredient.name)) {
+      const existing = acc.find(item => item.name.toLowerCase() === ingredient.name.toLowerCase());
+      if (!existing) {
         acc.push({ ...ingredient, purchased: false });
+      } else {
+        const match1 = String(existing.quantity).match(/^([\d.]+)\s*(.*)$/);
+        const match2 = String(ingredient.quantity).match(/^([\d.]+)\s*(.*)$/);
+        
+        if (match1 && match2 && match1[2].toLowerCase() === match2[2].toLowerCase()) {
+           const sum = parseFloat(match1[1]) + parseFloat(match2[1]);
+           // Format to remove trailing zeros (e.g., 2 instead of 2.0)
+           existing.quantity = `${Number(sum.toFixed(2))} ${match1[2]}`.trim();
+        } else {
+           existing.quantity = `${existing.quantity} + ${ingredient.quantity}`;
+        }
       }
       return acc;
     }, []);
@@ -144,10 +164,14 @@ function Planner() {
                   >
                     <div className="meal-slot-label">{mealType}</div>
                     {slotData ? (
-                      <>
+                      <div 
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, slotData.recipeId, slotKey)}
+                        className="draggable-recipe-slot"
+                      >
                         <h4>{recipe ? recipe.name : "Not found"}</h4>
                         <button className="remove-btn" onClick={() => handleRemoveMeal(slotKey)}>Remove</button>
-                      </>
+                      </div>
                     ) : (
                       <p style={{ color: '#999', fontSize: '0.9rem' }}>Drag recipe here</p>
                     )}

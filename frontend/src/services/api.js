@@ -10,7 +10,7 @@ export const getImageUrl = (imagePath) => {
   return imagePath;
 };
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: API_BASE,
 });
 

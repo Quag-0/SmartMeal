@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 
-function ManageRecipes() {
+function ManageRecipes({ isEmbedded = false }) {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRecipe, setEditingRecipe] = useState(null);
@@ -131,13 +132,23 @@ function ManageRecipes() {
   };
 
   return (
-    <main className="container">
-      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className={isEmbedded ? "" : "container"}>
+      <div className="page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <div>
-          <h2>🛡️ Manage Recipes</h2>
-          <p>Admin dashboard to create, edit, and delete global recipes.</p>
+          <h2 style={{ margin: 0 }}>🛡️ Manage Recipes</h2>
+          {!isEmbedded && <p style={{ margin: 0, marginTop: '5px' }}>Admin dashboard to create, edit, and delete global recipes.</p>}
         </div>
         <button className="btn btn-primary" onClick={openAddModal}>+ Add New Recipe</button>
+      </div>
+
+      <div style={{ display: 'flex', marginBottom: '1.5rem' }}>
+        <input 
+          type="text" 
+          placeholder="🔍 Search recipes by name or author..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ width: '100%', maxWidth: '400px', padding: '0.8rem', border: '1px solid #ddd', borderRadius: '8px', fontSize: '1rem' }}
+        />
       </div>
 
       {isLoading ? (
@@ -149,13 +160,20 @@ function ManageRecipes() {
               <tr style={{ borderBottom: '2px solid #eee' }}>
                 <th style={{ padding: '1rem' }}>Image</th>
                 <th style={{ padding: '1rem' }}>Name</th>
+                <th style={{ padding: '1rem' }}>Author</th>
                 <th style={{ padding: '1rem' }}>Category</th>
+                <th style={{ padding: '1rem' }}>Rating</th>
                 <th style={{ padding: '1rem' }}>Time</th>
                 <th style={{ padding: '1rem' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {recipes.map(recipe => (
+              {recipes.filter(recipe => {
+                const term = searchTerm.toLowerCase();
+                const matchName = recipe.name.toLowerCase().includes(term);
+                const matchAuthor = recipe.author && recipe.author.username.toLowerCase().includes(term);
+                return matchName || matchAuthor;
+              }).map(recipe => (
                 <tr key={recipe._id || recipe.id} style={{ borderBottom: '1px solid #eee' }}>
                   <td style={{ padding: '1rem' }}>
                     <img 
@@ -165,7 +183,13 @@ function ManageRecipes() {
                     />
                   </td>
                   <td style={{ padding: '1rem', fontWeight: '500' }}>{recipe.name}</td>
+                  <td style={{ padding: '1rem', color: '#666' }}>
+                    {recipe.author ? recipe.author.username : <span style={{ fontStyle: 'italic', opacity: 0.6 }}>System</span>}
+                  </td>
                   <td style={{ padding: '1rem', color: '#666' }}>{recipe.category}</td>
+                  <td style={{ padding: '1rem', color: '#666' }}>
+                    {recipe.averageRating > 0 ? `⭐ ${recipe.averageRating.toFixed(1)}` : '-'}
+                  </td>
                   <td style={{ padding: '1rem', color: '#666' }}>{recipe.cookingTime} min</td>
                   <td style={{ padding: '1rem' }}>
                     <button className="btn btn-secondary" style={{ padding: '0.4rem 0.8rem', marginRight: '0.5rem', fontSize: '0.9rem' }} onClick={() => openEditModal(recipe)}>Edit</button>
@@ -173,9 +197,14 @@ function ManageRecipes() {
                   </td>
                 </tr>
               ))}
-              {recipes.length === 0 && (
+              {recipes.filter(recipe => {
+                const term = searchTerm.toLowerCase();
+                const matchName = recipe.name.toLowerCase().includes(term);
+                const matchAuthor = recipe.author && recipe.author.username.toLowerCase().includes(term);
+                return matchName || matchAuthor;
+              }).length === 0 && (
                 <tr>
-                  <td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>No recipes found. Create one!</td>
+                  <td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>No recipes found.</td>
                 </tr>
               )}
             </tbody>
@@ -185,7 +214,7 @@ function ManageRecipes() {
 
       {isModalOpen && (
         <div className="modal-overlay" style={{ display: 'flex', opacity: 1 }}>
-          <div className="modal-container" style={{ maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', display: 'block' }}>
+          <div className="modal-container" style={{ width: '90%', maxWidth: '1000px', maxHeight: '90vh', overflowY: 'auto', display: 'block', padding: '2.5rem' }}>
             <button className="modal-close" onClick={() => setIsModalOpen(false)}>&times;</button>
             <h2 style={{ marginBottom: '1.5rem', borderBottom: '1px solid #eee', paddingBottom: '1rem' }}>
               {editingRecipe ? 'Edit Recipe' : 'Add New Recipe'}
@@ -232,9 +261,15 @@ function ManageRecipes() {
                     <input type="text" placeholder="Name (e.g. Tomato)" value={ing.name} onChange={e => handleIngredientChange(idx, 'name', e.target.value)} required style={{ flex: 2, padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }} />
                     <input type="text" placeholder="Qty (e.g. 2 pcs)" value={ing.quantity} onChange={e => handleIngredientChange(idx, 'quantity', e.target.value)} required style={{ flex: 1, padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }} />
                     <select value={ing.category} onChange={e => handleIngredientChange(idx, 'category', e.target.value)} style={{ flex: 1, padding: '0.5rem', border: '1px solid #ddd', borderRadius: '4px' }}>
-                      <option value="vegetables">Vegetables</option>
-                      <option value="meat-fish">Meat & Fish</option>
-                      <option value="dry-goods">Dry Goods / Spices</option>
+                      <option value="vegetables">🥬 Vegetables</option>
+                      <option value="fruits">🍎 Fruits</option>
+                      <option value="meat-fish">🥩 Meat & Seafood</option>
+                      <option value="dairy-eggs">🥚 Dairy & Eggs</option>
+                      <option value="bakery">🍞 Bakery</option>
+                      <option value="dry-goods">🧂 Pantry & Spices</option>
+                      <option value="frozen">🧊 Frozen Foods</option>
+                      <option value="beverages">🧃 Beverages</option>
+                      <option value="others">🛒 Others</option>
                     </select>
                     <button type="button" onClick={() => removeIngredient(idx)} style={{ padding: '0.5rem 0.8rem', background: '#ffebee', color: '#c62828', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>X</button>
                   </div>
@@ -263,7 +298,7 @@ function ManageRecipes() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }
 

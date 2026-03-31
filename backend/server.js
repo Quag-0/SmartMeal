@@ -24,12 +24,16 @@ const recipesRoute = require("./routes/recipes");
 const userRoute = require("./routes/user");
 const shoppingRoute = require("./routes/shopping");
 const authRoute = require("./routes/authRoutes");
+const adminRoute = require("./routes/adminRoutes");
+const reviewRoute = require("./routes/reviews");
 
 // mount routes
 app.use("/api/recipes", recipesRoute);
 app.use("/api/user", userRoute);
 app.use("/api/shopping-list", shoppingRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/admin", adminRoute);
+app.use("/api/reviews", reviewRoute);
 
 // connect to MongoDB
 const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/smartmeal";

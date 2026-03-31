@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
+import './Profile.css';
 
 function Profile() {
   const { updateCurrentUser } = useContext(AuthContext);
@@ -105,7 +106,7 @@ function Profile() {
           <h2>👤 Edit Profile</h2>
         </div>
         
-        {successMsg && <div className="success-msg" style={{display: 'block'}}>{successMsg}</div>}
+        {successMsg && <div className="success-msg">{successMsg}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="avatar-preview-container">

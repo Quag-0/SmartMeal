@@ -6,7 +6,10 @@ const mongoose = require("mongoose");
 
 async function getSavedRecipes(userId) {
   const user = await User.findById(userId);
-  await user.populate("savedRecipes");
+  await user.populate({
+    path: "savedRecipes",
+    populate: { path: "author", select: "username avatar" }
+  });
   return user.savedRecipes;
 }
 
@@ -32,7 +35,10 @@ async function toggleSavedRecipe(userId, recipeIdentifier) {
     user.savedRecipes.splice(idx, 1);
   }
   await user.save();
-  await user.populate("savedRecipes");
+  await user.populate({
+    path: "savedRecipes",
+    populate: { path: "author", select: "username avatar" }
+  });
   return user.savedRecipes;
 }
 

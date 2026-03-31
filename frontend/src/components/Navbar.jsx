@@ -1,6 +1,7 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import React, { useContext, useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import "./Navbar.css";
 
 function Navbar() {
   const { currentUser, logout } = useContext(AuthContext);
@@ -16,68 +17,93 @@ function Navbar() {
         setDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = () => {
     logout();
     setDropdownOpen(false);
-    navigate('/');
+    navigate("/");
   };
 
   const getAvatarUrl = () => {
-    if (!currentUser.avatar) return `https://ui-avatars.com/api/?name=${currentUser.username}&background=random`;
-    if (currentUser.avatar.startsWith('/')) return `http://localhost:5000${currentUser.avatar}`;
+    if (!currentUser.avatar)
+      return `https://ui-avatars.com/api/?name=${currentUser.username}&background=random`;
+    if (currentUser.avatar.startsWith("/"))
+      return `http://localhost:5000${currentUser.avatar}`;
     return currentUser.avatar;
   };
 
   const navLinks = [
-    { name: 'Recipes', path: '/' },
-    { name: 'Meal Planner', path: '/planner' },
-    { name: 'Shopping List', path: '/shopping' },
+    { name: "Recipes", path: "/" },
+    { name: "Meal Planner", path: "/planner" },
+    { name: "Shopping List", path: "/shopping" },
   ];
 
   return (
     <nav className="navbar">
       <div className="nav-container">
-        <h1 className="logo">🍽️ SmartMeal</h1>
+        <h1 className="logo"> SmartMeal</h1>
         <ul className="nav-links">
           {navLinks.map((link) => (
             <li key={link.path}>
-              <Link 
-                to={link.path} 
-                className={location.pathname === link.path ? 'active' : ''}
+              <Link
+                to={link.path}
+                className={location.pathname === link.path ? "active" : ""}
               >
                 {link.name}
               </Link>
             </li>
           ))}
+          {currentUser && (
+            <li>
+              <Link to="/share-recipe" className="share-recipe-link">
+                Share Recipe 🍳
+              </Link>
+            </li>
+          )}
         </ul>
 
         <div className="auth-section">
           {currentUser ? (
             <div className="user-dropdown-container" ref={dropdownRef}>
-              <div 
-                className="auth-user" 
+              <div
+                className="auth-user"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                style={{ cursor: 'pointer' }}
               >
                 <img src={getAvatarUrl()} alt="Avatar" className="avatar" />
                 <span>{currentUser.username}</span>
               </div>
-              <div className={`user-dropdown ${dropdownOpen ? 'show' : ''}`} style={{ display: dropdownOpen ? 'block' : 'none' }}>
-                <Link to="/profile" onClick={() => setDropdownOpen(false)}>⚙️ Profile</Link>
-                {currentUser.role === 'admin' && (
-                  <Link to="/manage-recipes" onClick={() => setDropdownOpen(false)}>🛡️ Manage Recipes</Link>
+              <div
+                className={`user-dropdown ${dropdownOpen ? "show" : ""}`}
+              >
+                <Link to="/profile" onClick={() => setDropdownOpen(false)}>
+                  ⚙️ Profile
+                </Link>
+                <Link to="/saved-recipes" onClick={() => setDropdownOpen(false)}>
+                  🔖 Saved Recipes
+                </Link>
+                {currentUser.role === "admin" && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    🛡️ Admin Dashboard
+                  </Link>
                 )}
-                <button onClick={handleLogout} style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: '0.75rem 1rem', cursor: 'pointer' }}>
+                <button
+                  onClick={handleLogout}
+                  className="logout-btn"
+                >
                   🚪 Logout
                 </button>
               </div>
             </div>
           ) : (
-            <Link to="/login" className="login-btn-nav">[Login / Sign Up]</Link>
+            <Link to="/login" className="login-btn-nav">
+              Login
+            </Link>
           )}
         </div>
       </div>

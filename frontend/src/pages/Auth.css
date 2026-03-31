@@ -1,0 +1,128 @@
+/* ========================================
+   AUTHENTICATION PAGES (Login / Register)
+   ======================================== */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px);
+}
+
+.auth-box {
+    background: white;
+    padding: var(--space-5);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    border: 1px solid var(--color-border-light);
+}
+
+.auth-box h2 {
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+    font-size: 1.8rem;
+}
+
+.auth-box p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-4);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.input-full {
+    width: 100%;
+    padding: 0.9rem var(--space-3);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+    background-color: var(--color-background);
+}
+
+.input-full:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(201, 106, 90, 0.1);
+    background-color: white;
+}
+
+.btn-full {
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1.1rem;
+    margin-top: var(--space-2);
+}
+
+.auth-divider {
+    margin: var(--space-4) 0;
+    position: relative;
+    text-align: center;
+}
+
+.auth-divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-border-light);
+    z-index: 1;
+}
+
+.auth-divider span {
+    background: white;
+    padding: 0 var(--space-2);
+    color: var(--color-text-disabled);
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background-color: white;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-primary);
+    font-weight: var(--weight-medium);
+}
+
+.btn-google:hover {
+    background-color: var(--color-bg-light);
+    border-color: var(--color-border-hover);
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.auth-switch {
+    margin-top: var(--space-4);
+    font-size: 0.95rem;
+    color: var(--color-text-secondary);
+}
+
+.auth-switch a {
+    color: var(--color-primary);
+    font-weight: var(--weight-semibold);
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .auth-box {
+        padding: var(--space-4);
+    }
+}

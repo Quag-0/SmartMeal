@@ -1,0 +1,295 @@
+/* ========================================
+   RECIPE DETAIL MODAL
+   ======================================== */
+.modal-overlay {
+    background-color: rgba(45, 45, 45, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-container {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px; /* Slimmer for stacked layout */
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    transform: scale(0.95) translateY(20px);
+    transition: all var(--transition-slow);
+    position: relative;
+    border: 1px solid var(--color-border-light);
+}
+
+.modal-overlay.active .modal-container {
+    transform: scale(1) translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.8rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
+}
+
+.modal-close:hover {
+    background: white;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.modal-header {
+    width: 100%;
+    height: 350px;
+}
+
+.modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-body {
+    padding: var(--space-5);
+}
+
+.modal-title {
+    font-size: 2rem;
+    font-weight: var(--weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-3);
+    line-height: 1.2;
+}
+
+.modal-meta {
+    display: flex;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.modal-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+    padding: var(--space-2) 0;
+}
+
+.modal-author .author-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modal-author .author-name {
+    font-size: var(--font-medium);
+    color: var(--color-text-secondary);
+}
+
+.modal-meta .recipe-tag {
+    background: var(--gradient-primary);
+    color: white;
+    padding: var(--space-1) var(--space-3);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: var(--weight-semibold);
+    border: 1px solid rgba(230, 161, 90, 0.2);
+}
+
+.modal-section {
+    margin-bottom: var(--space-4);
+}
+
+.modal-section h3 {
+    font-size: 1.25rem;
+    color: var(--color-primary);
+    margin-bottom: var(--space-2);
+}
+
+.modal-ingredients {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-ingredients li {
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--color-border-light);
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-text-secondary);
+}
+
+.modal-ingredients li:last-child {
+    border-bottom: none;
+}
+
+.modal-ingredients li::before {
+    content: "•";
+    color: var(--color-secondary);
+    font-weight: bold;
+    margin-right: var(--space-2);
+}
+
+.modal-instructions {
+    padding-left: var(--space-3);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+}
+
+.modal-instructions li {
+    margin-bottom: var(--space-2);
+}
+
+/* REVIEWS SECTION */
+.reviews-section {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 2px solid var(--color-bg-light);
+}
+
+.review-form {
+    background: var(--color-bg-light);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-5);
+}
+
+.rating-input {
+    display: flex;
+    gap: 4px;
+    margin-bottom: var(--space-3);
+}
+
+.star {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-border-light);
+    transition: transform 0.2s;
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+
+.star.filled {
+    color: #ffcc00;
+}
+
+.review-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: var(--space-3);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-3);
+    font-family: inherit;
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.review-item {
+    background: white;
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-light);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+}
+
+.review-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.review-user {
+    font-weight: var(--weight-bold);
+    font-size: 0.95rem;
+}
+
+.review-rating {
+    margin-left: auto;
+    color: #ffcc00;
+}
+
+.review-comment {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: var(--color-text-disabled);
+}
+
+.no-reviews {
+    text-align: center;
+    color: var(--color-text-disabled);
+    padding: var(--space-4);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .modal-container {
+        max-width: 95%;
+        max-height: 95vh;
+        border-radius: var(--radius-lg);
+    }
+    .modal-content {
+        flex-direction: column;
+    }
+    .modal-left {
+        flex: 0 0 auto;
+        min-width: 100%;
+        max-height: 250px;
+    }
+    /* ... other modal media queries ... */
+}

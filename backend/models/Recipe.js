@@ -16,6 +16,9 @@ const RecipeSchema = new mongoose.Schema(
     type: { type: String, required: true },
     ingredients: [IngredientSchema],
     instructions: [String],
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, // Use false for legacy system recipes
+    averageRating: { type: Number, default: 0 },
+    numReviews: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

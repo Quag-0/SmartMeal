@@ -1,0 +1,187 @@
+/* ========================================
+   NAVIGATION BAR
+   ======================================== */
+.navbar {
+    background: var(--gradient-primary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: none;
+    box-shadow: none;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: var(--weight-bold);
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+}
+
+.nav-links a {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: var(--weight-medium);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.share-recipe-link {
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: var(--weight-bold);
+    transition: all var(--transition-normal);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.share-recipe-link:hover {
+    background: white;
+    color: var(--color-primary) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Auth Section in Navbar */
+.auth-section {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.login-btn-nav {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+    transition: all var(--transition-normal);
+    border: 1px solid var(--color-border-light);
+}
+
+.login-btn-nav:hover {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.auth-user {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: var(--space-2);
+    color: white;
+    font-weight: var(--weight-medium);
+    padding: var(--space-1);
+    border-radius: 25px;
+    transition: background-color var(--transition-fast);
+}
+
+.auth-user:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-fast);
+}
+
+.auth-user:hover .avatar {
+    transform: scale(1.05);
+}
+
+/* Dropdown Menu */
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: var(--space-2);
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    min-width: 200px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--color-border-light);
+    animation: fadeIn var(--transition-fast);
+    transform-origin: top right;
+}
+
+.user-dropdown.show {
+    display: flex;
+}
+
+.user-dropdown a,
+.user-dropdown button {
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-text-secondary);
+    text-align: left;
+    background: none;
+    font-size: 0.95rem;
+    font-weight: var(--weight-medium);
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid var(--color-bg-light);
+}
+
+.user-dropdown a:last-child,
+.user-dropdown button:last-child {
+    border-bottom: none;
+}
+
+.user-dropdown a:hover,
+.user-dropdown button:hover {
+    background: var(--color-bg-light);
+    color: var(--color-primary);
+    padding-left: 20px;
+}
+
+.admin-only {
+    display: none;
+}
+
+/* Response Media Queries for Navbar items */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: var(--space-3);
+        padding: var(--space-3);
+    }
+
+    .nav-links {
+        gap: var(--space-2);
+        font-size: 0.95rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
